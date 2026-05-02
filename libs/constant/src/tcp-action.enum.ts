@@ -3,6 +3,8 @@ enum USER {
     LOGIN = 'user.login',
     GET_ALL = 'user.get_all',
     GET_BY_EMAIL = 'user.get_by_email',
+    VERIFY_EMAIL = 'user.verify_email',
+    FORGOT_PASSWORD = 'user.forgot_password',
 }
 enum POST {
     CREATE = 'post.create',

@@ -1,9 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TCP_REQUEST_MESSAGE } from '@common/constant';
-import { GetUserDto, LoginDto, SignUpDto } from '@common/dto';
+import { EmailDto, ForgotPasswordDto, GetUserDto, LoginDto, SignUpDto } from '@common/dto';
+import { MicroserviceExceptionFilter } from '@common/exception';
 
+
+@UseFilters(MicroserviceExceptionFilter)
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) { }
@@ -26,5 +29,13 @@ export class AppController {
     const res = await this.appService.findByEmail(email);
     const { password, ...user } = res;
     return user;
+  }
+  @MessagePattern(TCP_REQUEST_MESSAGE.USER.VERIFY_EMAIL)
+  async verifyEmail(@Payload() body: EmailDto) {
+    return await this.appService.verifyEmail(body);
+  }
+  @MessagePattern(TCP_REQUEST_MESSAGE.USER.FORGOT_PASSWORD)
+  async forgotPassword(@Payload() body: ForgotPasswordDto) {
+    return await this.appService.forgotPassword(body);
   }
 }

@@ -7,6 +7,7 @@ import { CreatePostDto, GetUserDto } from "@common/dto";
 import { JwtAuthGuard } from "@common/guard";
 import { CurrentUser } from "@common/decorator";
 import { IUserJwt } from "@common/interface";
+import { firstValueFrom } from "rxjs";
 
 @ApiTags('posts')
 @ApiBearerAuth()
@@ -22,7 +23,9 @@ export class PostsController {
     @ApiResponse({ status: 201, description: 'Create success' })
     @Post()
     async create(@Body() body: CreatePostDto, @CurrentUser() user: IUserJwt) {
-        return this.postsClient.send(TCP_REQUEST_MESSAGE.POST.CREATE, { ...body, uploadBy: user.id });
+        return await firstValueFrom(
+            this.postsClient.send(TCP_REQUEST_MESSAGE.POST.CREATE, { ...body, uploadBy: user.id })
+        );
     }
 
 }

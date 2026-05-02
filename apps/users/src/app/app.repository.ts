@@ -25,4 +25,7 @@ export class AppRepository {
       relations: ['profile'],
     });
   }
+  async updateUser(user: User): Promise<User> {
+    return this.userRepository.save(user);
+  }
 }

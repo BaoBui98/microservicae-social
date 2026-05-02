@@ -4,10 +4,11 @@ import sgMail from '@sendgrid/mail';
 
 
 import { ConfigService } from '@nestjs/config';
-import { EmailDto } from '@common/dto';
+import { EmailDto, ResponseVerifyEmailDto } from '@common/dto';
 import { EMAIL_ACTION } from '@common/constant';
 
 import { getRegisterEmailTemplate } from '../html/register';
+import { getVerifyCodeEmailTemplate } from '../html/verify-code';
 
 @Injectable()
 export class AppService {
@@ -16,10 +17,13 @@ export class AppService {
       this.configService.get<string>('SENDGRID_API_KEY')!,
     );
   }
-  async sendMail(data: EmailDto) {
+  async sendMail(data: EmailDto | ResponseVerifyEmailDto) {
     switch (data.action) {
       case EMAIL_ACTION.REGISTER:
         await this.registerEmail(data);
+        break;
+      case EMAIL_ACTION.VERIFY:
+        await this.verifyCode(data as ResponseVerifyEmailDto);
         break;
       default:
         throw new Error('Invalid action');
@@ -36,6 +40,18 @@ export class AppService {
     });
     return {
       message: 'Email sent successfully',
+    };
+  }
+  async verifyCode(data: ResponseVerifyEmailDto) {
+    const htmlContent = getVerifyCodeEmailTemplate(data.email, data.code);
+    await sgMail.send({
+      to: data.email,
+      from: this.configService.get<string>('SENDGRID_FROM_EMAIL')!,
+      subject: "Your verification code",
+      html: htmlContent,
+    });
+    return {
+      message: 'Verification code sent successfully',
     };
   }
 }

@@ -7,6 +7,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { EnvironmentVariables, MicroserviceKey } from '@common/config';
+import { MicroserviceExceptionFilter } from '@common/exception';
 
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
@@ -21,6 +22,7 @@ async function bootstrap() {
     },
   });
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new MicroserviceExceptionFilter());
 
   const globalPrefix = env.PREFIX;
   const port = env.USER_PORT;

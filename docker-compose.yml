@@ -20,7 +20,7 @@ services:
     image: redis:7
     container_name: redis_social_app
     restart: unless-stopped
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --requirepass social-app
     ports:
       - '6379:6379'
     volumes:

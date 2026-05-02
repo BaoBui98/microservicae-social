@@ -21,7 +21,9 @@
       "@common/entity": ["./libs/entity/src/index.ts"],
       "@common/decorator": ["./libs/decorator/src/index.ts"],
       "@common/guard": ["./libs/guard/src/index.ts"],
-      "@common/interface": ["./libs/interface/src/index.ts"]
+      "@common/interface": ["./libs/interface/src/index.ts"],
+      "@common/services": ["./libs/services/src/index.ts"],
+      "@common/exception": ["./libs/exception/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

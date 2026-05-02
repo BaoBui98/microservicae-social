@@ -7,6 +7,7 @@ import { GetUserDto } from "@common/dto";
 import { JwtAuthGuard } from "@common/guard";
 import { CurrentUser } from "@common/decorator";
 import { IUserJwt } from "@common/interface";
+import { firstValueFrom } from "rxjs";
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -22,7 +23,9 @@ export class UsersController {
     @ApiResponse({ status: 200, description: 'Get success' })
     @Get()
     async getAllUser(@Query() query: GetUserDto) {
-        return this.usersClient.send(TCP_REQUEST_MESSAGE.USER.GET_ALL, query);
+        return await firstValueFrom(
+            this.usersClient.send(TCP_REQUEST_MESSAGE.USER.GET_ALL, query)
+        );
     }
 
     @UseGuards(JwtAuthGuard)
@@ -30,6 +33,8 @@ export class UsersController {
     @ApiResponse({ status: 200, description: 'Get success' })
     @Get('profile')
     async getProfile(@CurrentUser() user: IUserJwt) {
-        return this.usersClient.send(TCP_REQUEST_MESSAGE.USER.GET_BY_EMAIL, user.email);
+        return await firstValueFrom(
+            this.usersClient.send(TCP_REQUEST_MESSAGE.USER.GET_BY_EMAIL, user.email)
+        );
     }
 }

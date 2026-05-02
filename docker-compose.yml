@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_social_app
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: social-app
+      POSTGRES_PASSWORD: social-app
+      POSTGRES_DB: social-app
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  redis:
+    image: redis:7
+    container_name: redis_social_app
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
+  mongo:
+    image: mongo:7
+    container_name: mongo_social_app
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: social-app
+      MONGO_INITDB_ROOT_PASSWORD: social-app
+      MONGO_INITDB_DATABASE: social-app
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  mongo_data:
+
+networks:
+  app_network:
+    driver: bridge

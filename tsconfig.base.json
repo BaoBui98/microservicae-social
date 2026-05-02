@@ -13,7 +13,16 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "paths": {}
+    "paths": {
+      "@common/config": ["./libs/config/src/index.ts"],
+      "@common/constant": ["./libs/constant/src/index.ts"],
+      "@common/dto": ["./libs/dto/src/index.ts"],
+      "@common/interceptor": ["./libs/interceptor/src/index.ts"],
+      "@common/entity": ["./libs/entity/src/index.ts"],
+      "@common/decorator": ["./libs/decorator/src/index.ts"],
+      "@common/guard": ["./libs/guard/src/index.ts"],
+      "@common/interface": ["./libs/interface/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

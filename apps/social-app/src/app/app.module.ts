@@ -5,7 +5,7 @@ import { jwtConfig } from '@common/config';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PostModule } from './modules/posts/post.module';
-import { MailModule } from './modules/mail/mail.module';
+
 
 @Module({
   imports: [
@@ -14,7 +14,6 @@ import { MailModule } from './modules/mail/mail.module';
     UsersModule,
     AuthModule,
     PostModule,
-    MailModule
   ],
   controllers: [],
   providers: [],

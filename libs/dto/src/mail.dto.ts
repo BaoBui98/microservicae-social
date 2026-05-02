@@ -9,4 +9,11 @@ export class EmailDto {
     @IsEmail({}, { message: 'Invalid email format' })
     @IsNotEmpty({ message: 'Email is required' })
     email!: string;
+
+    @ApiProperty({
+        example: 'register',
+        description: 'Action to be performed',
+    })
+    @IsNotEmpty({ message: 'Action is required' })
+    action!: string;
 }

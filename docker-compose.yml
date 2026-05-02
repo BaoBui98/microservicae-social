@@ -43,10 +43,26 @@ services:
     networks:
       - app_network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_social_app
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: social-app
+      RABBITMQ_DEFAULT_PASS: social-app
+    ports:
+      - '5672:5672'   # app connect
+      - '15672:15672' # dashboard
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app_network
+
 volumes:
   postgres_data:
   redis_data:
   mongo_data:
+  rabbitmq_data:
 
 networks:
   app_network:

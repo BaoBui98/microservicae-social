@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppRepository } from './app.repository';
 import { User, Profile } from '@common/entity';
-import { jwtConfig, typeOrmConfig } from '@common/config';
+import { jwtConfig, typeOrmConfig, registerRabbitMQ } from '@common/config';
+import { RMQ_CLIENT, RMQ_QUEUE } from '@common/constant';
 
 @Module({
   imports: [
@@ -16,6 +18,9 @@ import { jwtConfig, typeOrmConfig } from '@common/config';
     JwtModule.registerAsync(jwtConfig),
     TypeOrmModule.forRootAsync(typeOrmConfig),
     TypeOrmModule.forFeature([User, Profile]),
+    ClientsModule.registerAsync([
+      registerRabbitMQ(RMQ_CLIENT.MAIL, RMQ_QUEUE.MAIL),
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService, AppRepository],

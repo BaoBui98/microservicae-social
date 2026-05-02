@@ -21,6 +21,8 @@
     "@nestjs/typeorm": "^11.0.1",
     "@sendgrid/mail": "^8.1.6",
     "@types/bcrypt": "^6.0.0",
+    "amqp-connection-manager": "^5.0.0",
+    "amqplib": "^1.0.3",
     "axios": "^1.6.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",

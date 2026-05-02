@@ -6,13 +6,17 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { EnvironmentVariables, MicroserviceKey } from '@common/config';
+import { ConfigService } from '@nestjs/config';
+import { EnvironmentVariables, MicroserviceKey, getRabbitMQConfig } from '@common/config';
 
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+
+import { RMQ_QUEUE } from '@common/constant';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const env = new EnvironmentVariables();
+  const configService = app.get(ConfigService);
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
@@ -20,6 +24,7 @@ async function bootstrap() {
       port: Number(process.env[`${MicroserviceKey.MAIL}_PORT`]),
     },
   });
+  app.connectMicroservice<MicroserviceOptions>(getRabbitMQConfig(configService, RMQ_QUEUE.MAIL));
   app.useGlobalPipes(new ValidationPipe());
 
   const globalPrefix = env.PREFIX;

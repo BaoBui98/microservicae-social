@@ -1,8 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ClientProxy } from '@nestjs/microservices';
 import { User, Profile } from '@common/entity';
 import { DataSource } from 'typeorm';
+import { TCP_REQUEST_MESSAGE, RMQ_CLIENT, RMQ_MESSAGE, EMAIL_ACTION } from '@common/constant';
 import { AppRepository } from './app.repository';
 import { LoginDto, SignUpDto } from '@common/dto';
 
@@ -12,6 +14,7 @@ export class AppService {
     private readonly jwtService: JwtService,
     private readonly appRepository: AppRepository,
     private readonly dataSource: DataSource,
+    @Inject(RMQ_CLIENT.MAIL) private readonly mailClient: ClientProxy,
   ) { }
 
   async hashPassword(password: string): Promise<string> {
@@ -69,6 +72,8 @@ export class AppService {
       });
 
       const { password, ...result } = newUser;
+
+      this.mailClient.emit(RMQ_MESSAGE.MAIL.SEND, { email: result.email, action: EMAIL_ACTION.REGISTER });
 
       return result;
     } catch (error) {

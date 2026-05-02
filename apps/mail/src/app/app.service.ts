@@ -4,6 +4,10 @@ import sgMail from '@sendgrid/mail';
 
 
 import { ConfigService } from '@nestjs/config';
+import { EmailDto } from '@common/dto';
+import { EMAIL_ACTION } from '@common/constant';
+
+import { getRegisterEmailTemplate } from '../html/register';
 
 @Injectable()
 export class AppService {
@@ -12,12 +16,23 @@ export class AppService {
       this.configService.get<string>('SENDGRID_API_KEY')!,
     );
   }
-  async sendMail(email: string, subject: string, html: string) {
+  async sendMail(data: EmailDto) {
+    switch (data.action) {
+      case EMAIL_ACTION.REGISTER:
+        await this.registerEmail(data);
+        break;
+      default:
+        throw new Error('Invalid action');
+    }
+
+  }
+  private async registerEmail(data: EmailDto) {
+    const htmlContent = getRegisterEmailTemplate(data.email);
     await sgMail.send({
-      to: email,
+      to: data.email,
       from: this.configService.get<string>('SENDGRID_FROM_EMAIL')!,
-      subject,
-      html,
+      subject: "Verify your email address",
+      html: htmlContent,
     });
     return {
       message: 'Email sent successfully',
